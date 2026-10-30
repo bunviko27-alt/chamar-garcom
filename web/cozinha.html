@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cozinha</title>
+<link rel="stylesheet" href="/base.css">
+<link rel="manifest" href="/manifest-cozinha.json">
+<link rel="icon" href="/icone.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  body { padding: 0 16px 24px; }
+  header { padding: 18px 4px 4px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  header h1 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+  header small { display: block; color: var(--suave); font-weight: 500; font-size: 13px; }
+  #ativar { background: #fff4ec; color: var(--marca-escura); border: 1.5px dashed #f4b896;
+    padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+  body.som #ativar { display: none; }
+
+  .colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .colunas { grid-template-columns: 1fr; } }
+  .lista { display: flex; flex-direction: column; gap: 10px; }
+  .novo { border-left: 6px solid var(--aviso); }
+  .preparando { border-left: 6px solid var(--marca); }
+  .cartao .mesa { font-size: 26px; }
+  .atrasado .tempo { color: var(--marca-escura); font-weight: 700; }
+  .cartao .desc { font-size: 17px; }
+  .cartao .btn { padding: 14px; font-size: 16px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Cozinha <small id="restaurante"></small></h1>
+    <button id="ativar">🔔 Ativar som e notificações</button>
+  </header>
+  <p id="aviso-alerta" class="aviso-alerta"></p>
+
+  <div class="colunas">
+    <section>
+      <h2 class="secao">Novos <span class="n" id="n-novos"></span></h2>
+      <div class="lista" id="novos"></div>
+    </section>
+    <section>
+      <h2 class="secao">Preparando</h2>
+      <div class="lista" id="preparando"></div>
+    </section>
+  </div>
+
+<script type="module">
+  import { iniciar, acaoPedido, ha, esc, bipe, agoraServidor, ativarAlertas, alertasAtivos } from "/comum.js";
+  window.acaoPedido = acaoPedido;
+
+  const $ = (id) => document.getElementById(id);
+  const ATRASO = 20 * 60; // segundos até o tempo ficar em destaque
+  let ultimo = null, vistos = null;
+
+  if (alertasAtivos()) $("ativar").textContent = "🔔 Ligar som";
+  $("ativar").onclick = async () => {
+    const aviso = await ativarAlertas();
+    document.body.classList.add("som");
+    $("aviso-alerta").textContent = aviso || "";
+  };
+
+  function cartao(p, classe, botao) {
+    const atrasado = agoraServidor() - p.criado > ATRASO ? " atrasado" : "";
+    return `
+      <div class="cartao ${classe}${atrasado}">
+        <div class="topo"><span class="mesa">Mesa ${esc(p.mesa)}</span><span class="tempo">${ha(p.criado)}</span></div>
+        <div class="desc">${p.desc ? esc(p.desc) : "<i style='color:var(--suave)'>Sem descrição — confirme com o garçom</i>"}</div>
+        <div class="acoes">${botao}</div>
+      </div>`;
+  }
+
+  function desenhar() {
+    if (!ultimo) return;
+    $("restaurante").textContent = ultimo.config.restaurante;
+    const novos = ultimo.pedidos.filter((p) => p.status === "enviado");
+    const prep = ultimo.pedidos.filter((p) => p.status === "preparando");
+
+    $("n-novos").textContent = novos.length || "";
+    $("novos").innerHTML = novos.map((p) => cartao(p, "novo",
+      `<button class="btn" onclick="acaoPedido(${p.id},'preparar')">Começar preparo</button>`
+    )).join("") || `<div class="vazio">Sem pedidos novos</div>`;
+    $("preparando").innerHTML = prep.map((p) => cartao(p, "preparando",
+      `<button class="btn ok" onclick="acaoPedido(${p.id},'pronto')">Pronto ✓</button>`
+    )).join("") || `<div class="vazio">Nada no fogo agora</div>`;
+
+    const atuais = new Set(novos.map((p) => p.id));
+    if (vistos && [...atuais].some((id) => !vistos.has(id))) {
+      bipe(2);
+    }
+    vistos = atuais;
+    document.title = novos.length ? `(${novos.length}) Cozinha` : "Cozinha";
+  }
+
+  setInterval(desenhar, 20000);
+  iniciar({ papel: "cozinha", aoReceber: (estado) => { ultimo = estado; desenhar(); } });
+</script>
+</body>
+</html>

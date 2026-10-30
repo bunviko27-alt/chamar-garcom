@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chamar garçom</title>
+<link rel="stylesheet" href="/base.css">
+<link rel="icon" href="/icone.svg">
+<style>
+  body { padding: 24px 16px; max-width: 520px; margin: 0 auto; }
+  h1 { margin: 0 0 4px; letter-spacing: -.02em; }
+  p { color: var(--suave); margin: 0 0 20px; }
+  a.cartao { text-decoration: none; color: inherit; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; }
+  a.cartao span { color: var(--suave); font-weight: 500; font-size: 14px; }
+  form { display: flex; gap: 8px; }
+  input { flex: 1; font: inherit; font-size: 16px; padding: 12px; border-radius: 12px; border: 1.5px solid var(--linha); background: var(--cartao); }
+</style>
+</head>
+<body>
+  <h1>Chamar garçom</h1>
+  <p>Escolha a tela deste aparelho.</p>
+  <a class="cartao" href="/garcom">🧑‍🍳 Garçom <span>celular</span></a>
+  <a class="cartao" href="/cozinha">🔥 Cozinha <span>tablet ou celular</span></a>
+  <a class="cartao" href="/demo">👀 Demonstração <span>tudo lado a lado</span></a>
+  <h2 class="secao">Tela de uma mesa</h2>
+  <form onsubmit="location.href='/mesa/' + encodeURIComponent(this.n.value); return false;">
+    <input name="n" inputmode="numeric" pattern="\w{1,10}" placeholder="Número da mesa" required>
+    <button class="btn marca">Abrir</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Garçom</title>
+<link rel="stylesheet" href="/base.css">
+<link rel="manifest" href="/manifest-garcom.json">
+<link rel="icon" href="/icone.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  body { padding: 0 16px 110px; max-width: 560px; margin: 0 auto; }
+  header { position: sticky; top: 0; background: var(--fundo); padding: 18px 4px 8px; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+  header small { display: block; color: var(--suave); font-weight: 500; font-size: 13px; }
+
+  #ativar { width: 100%; margin-top: 8px; background: #fff4ec; color: var(--marca-escura);
+    border: 1.5px dashed #f4b896; padding: 14px; border-radius: 14px; font-weight: 600; }
+  body.som #ativar { display: none; }
+
+  .lista { display: flex; flex-direction: column; gap: 10px; }
+  .chamado { border-left: 6px solid var(--marca); }
+  .chamado.novo { animation: chama 1s ease-in-out 3; }
+  @keyframes chama { 50% { background: #fff1ea; } }
+  .pronto { border-left: 6px solid var(--ok); }
+  .cozinha { flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px; }
+  .cozinha .mesa { font-size: 17px; }
+  .selo { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--linha); }
+  .selo.preparando { background: #fff3d6; color: #8a5a00; }
+
+  .fab { position: fixed; left: 50%; transform: translateX(-50%); bottom: max(20px, env(safe-area-inset-bottom));
+    padding: 16px 26px; border-radius: 999px; box-shadow: 0 8px 24px rgba(232,87,42,.35); font-size: 16px; }
+
+  dialog { border: 0; border-radius: 22px; padding: 22px; width: min(92vw, 420px); box-shadow: var(--sombra); }
+  dialog::backdrop { background: rgba(31,26,23,.4); }
+  dialog h3 { margin: 0 0 14px; font-size: 20px; }
+  dialog label { display: block; font-size: 13px; color: var(--suave); margin: 12px 0 6px; font-weight: 600; }
+  dialog select, dialog textarea { width: 100%; font: inherit; font-size: 16px; padding: 12px; border-radius: 12px;
+    border: 1.5px solid var(--linha); background: var(--fundo); }
+  dialog textarea { min-height: 96px; resize: vertical; }
+  dialog .acoes { display: flex; gap: 8px; margin-top: 16px; }
+  dialog .acoes .btn { flex: 1; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Garçom <small id="restaurante"></small></h1>
+  </header>
+  <button id="ativar">🔔 Toque aqui para ativar som e notificações</button>
+  <p id="aviso-alerta" class="aviso-alerta"></p>
+
+  <h2 class="secao">Chamando <span class="n" id="n-chamados"></span></h2>
+  <div class="lista" id="chamados"></div>
+
+  <h2 class="secao">Prontos para levar <span class="n" id="n-prontos"></span></h2>
+  <div class="lista" id="prontos"></div>
+
+  <h2 class="secao">Na cozinha</h2>
+  <div class="lista" id="cozinha"></div>
+
+  <button class="btn marca fab" id="novo">+ Novo pedido</button>
+
+  <dialog id="dlg">
+    <form method="dialog" id="form">
+      <h3 id="dlg-titulo">Anotar pedido</h3>
+      <div id="campo-mesa">
+        <label for="dlg-mesa">Mesa</label>
+        <select id="dlg-mesa"></select>
+      </div>
+      <label for="dlg-desc">O que foi pedido? (opcional)</label>
+      <textarea id="dlg-desc" placeholder="Ex.: 2 parmegianas, 1 suco de laranja sem açúcar"></textarea>
+      <div class="acoes">
+        <button class="btn claro" value="cancelar">Voltar</button>
+        <button class="btn marca" value="enviar">Enviar para cozinha</button>
+      </div>
+    </form>
+  </dialog>
+
+<script type="module">
+  import { iniciar, acaoMesa, acaoPedido, ha, esc, bipe, ativarAlertas, alertasAtivos } from "/comum.js";
+  Object.assign(window, { acaoMesa, acaoPedido, abrirPedido });
+
+  const $ = (id) => document.getElementById(id);
+  let ultimo = null, vistos = null;
+
+  if (alertasAtivos()) $("ativar").textContent = "🔔 Notificações ligadas · toque para ligar o som também";
+  $("ativar").onclick = async () => {
+    const aviso = await ativarAlertas();
+    document.body.classList.add("som");
+    $("aviso-alerta").textContent = aviso || "";
+  };
+
+  function abrirPedido(mesa) {
+    $("dlg-titulo").textContent = mesa ? `Pedido da mesa ${mesa}` : "Novo pedido";
+    $("campo-mesa").hidden = !!mesa;
+    const n = ultimo?.config.mesas || 10;
+    $("dlg-mesa").innerHTML = Array.from({ length: n }, (_, i) => `<option>${i + 1}</option>`).join("");
+    if (mesa) $("dlg-mesa").value = mesa;
+    $("dlg-desc").value = "";
+    $("dlg").returnValue = "";
+    $("dlg").showModal();
+  }
+  $("dlg").addEventListener("close", () => {
+    if ($("dlg").returnValue === "enviar") {
+      acaoMesa($("dlg-mesa").value, "pedido", { desc: $("dlg-desc").value });
+    }
+  });
+  $("novo").onclick = () => abrirPedido(null);
+
+  function desenhar() {
+    if (!ultimo) return;
+    $("restaurante").textContent = ultimo.config.restaurante;
+
+    const chamados = Object.entries(ultimo.chamados).sort((a, b) => a[1] - b[1]);
+    $("n-chamados").textContent = chamados.length || "";
+    $("chamados").innerHTML = chamados.length ? chamados.map(([mesa, ts]) => `
+      <div class="cartao chamado${vistos && !vistos.has("c" + mesa) ? " novo" : ""}">
+        <div class="topo"><span class="mesa">Mesa ${esc(mesa)}</span><span class="tempo">${ha(ts)}</span></div>
+        <div class="acoes">
+          <button class="btn claro" onclick="acaoMesa('${esc(mesa)}','atender')">Só atendi</button>
+          <button class="btn marca" onclick="abrirPedido('${esc(mesa)}')">Anotar pedido</button>
+        </div>
+      </div>`).join("") : `<div class="vazio">Nenhuma mesa chamando 🙌</div>`;
+
+    const prontos = ultimo.pedidos.filter((p) => p.status === "pronto");
+    $("n-prontos").textContent = prontos.length || "";
+    $("prontos").innerHTML = prontos.length ? prontos.map((p) => `
+      <div class="cartao pronto">
+        <div class="topo"><span class="mesa">Mesa ${esc(p.mesa)}</span><span class="tempo">pronto ${ha(p.atualizado)}</span></div>
+        ${p.desc ? `<div class="desc">${esc(p.desc)}</div>` : ""}
+        <div class="acoes"><button class="btn ok" onclick="acaoPedido(${p.id},'entregue')">Entregue na mesa ✓</button></div>
+      </div>`).join("") : `<div class="vazio">Nada esperando para sair</div>`;
+
+    const cozinha = ultimo.pedidos.filter((p) => p.status === "enviado" || p.status === "preparando");
+    $("cozinha").innerHTML = cozinha.length ? cozinha.map((p) => `
+      <div class="cartao cozinha">
+        <span class="mesa">Mesa ${esc(p.mesa)}</span>
+        <span class="selo ${p.status}">${p.status === "enviado" ? "Aguardando" : "Preparando"} · ${ha(p.criado)}</span>
+      </div>`).join("") : `<div class="vazio">Cozinha sem pedidos</div>`;
+
+    // Bipe só para o que é novo; com a tela fechada quem avisa é a notificação push.
+    const atuais = new Set([...chamados.map(([m]) => "c" + m), ...prontos.map((p) => "p" + p.id)]);
+    if (vistos) {
+      const novos = [...atuais].filter((k) => !vistos.has(k));
+      if (novos.length) bipe(novos.some((k) => k[0] === "c") ? 3 : 2);
+    }
+    vistos = atuais;
+    const total = chamados.length + prontos.length;
+    document.title = total ? `(${total}) Garçom` : "Garçom";
+  }
+
+  setInterval(desenhar, 20000); // atualiza o "há X min"
+  iniciar({ papel: "garcom", aoReceber: (estado) => { ultimo = estado; desenhar(); } });
+</script>
+</body>
+</html>

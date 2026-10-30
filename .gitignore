@@ -1,0 +1,5 @@
+# Arquivos auxiliares gerados na configuração (não vão para o repositório)
+supabase/seed_local.sql
+supabase/seed_local.js
+supabase/carregar_funcao.js
+.vercel

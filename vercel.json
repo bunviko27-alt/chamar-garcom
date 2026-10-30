@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "web",
+  "cleanUrls": true,
+  "rewrites": [{ "source": "/mesa/:n", "destination": "/mesa.html" }],
+  "headers": [
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/config.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
+}

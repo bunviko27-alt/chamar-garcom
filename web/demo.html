@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo · Chamar garçom</title>
+<link rel="stylesheet" href="/base.css">
+<link rel="icon" href="/icone.svg">
+<style>
+  body { padding: 16px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p { margin: 0 0 16px; color: var(--suave); font-size: 14px; }
+  .grade { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figcaption { font-size: 13px; font-weight: 700; color: var(--suave); text-transform: uppercase; letter-spacing: .06em; }
+  iframe { border: 0; display: block; background: var(--fundo); }
+  .tela-mesa { padding: 14px; background: #1f1a17; border-radius: 16px; }
+  .tela-mesa iframe { width: 480px; height: 320px; border-radius: 4px; }
+  .celular { padding: 10px; background: #1f1a17; border-radius: 34px; }
+  .celular iframe { width: 340px; height: 620px; border-radius: 26px; }
+  .tablet { flex: 1 1 520px; padding: 12px; background: #1f1a17; border-radius: 22px; }
+  .tablet iframe { width: 100%; height: 460px; border-radius: 12px; }
+  select { font: inherit; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--linha); }
+</style>
+</head>
+<body>
+  <h1>Chamar garçom: demonstração</h1>
+  <p>As três telas estão ligadas de verdade. Toque no botão da mesa e acompanhe o garçom e a cozinha.</p>
+  <div class="grade">
+    <figure>
+      <figcaption>Mesa <select id="mesa"></select> · tela touch do Raspberry</figcaption>
+      <div class="tela-mesa"><iframe id="f-mesa"></iframe></div>
+    </figure>
+    <figure>
+      <figcaption>Celular do garçom</figcaption>
+      <div class="celular"><iframe id="f-garcom"></iframe></div>
+    </figure>
+    <figure class="tablet">
+      <figcaption>Cozinha</figcaption>
+      <iframe id="f-cozinha"></iframe>
+    </figure>
+  </div>
+<script>
+  const sel = document.getElementById("mesa");
+  sel.innerHTML = Array.from({ length: 10 }, (_, i) => `<option>${i + 1}</option>`).join("");
+  // ?codigo=123456 na URL da demo faz as três telas entrarem sozinhas.
+  const q = location.search;
+  const abrir = () => (document.getElementById("f-mesa").src = `/mesa/${sel.value}${q}`);
+  sel.onchange = abrir;
+  abrir();
+  document.getElementById("f-garcom").src = `/garcom${q}`;
+  document.getElementById("f-cozinha").src = `/cozinha${q}`;
+</script>
+</body>
+</html>
