@@ -33,13 +33,23 @@ Tentativas erradas em excesso bloqueiam novas tentativas por alguns minutos.
 - Demonstração das 3 telas: https://chamar-garcom-topaz.vercel.app/demo
 
 ## Raspberry Pi da mesa (instalado no próprio Pi)
+Use o **Raspberry Pi OS Lite (32 bits)**, sem área de trabalho: o Pi 3B tem só 1 GB de RAM.
 Copie esta pasta para o Pi e rode, de dentro dela:
 ```
-bash instalar-mesa.sh 5 CODIGO_DA_EQUIPE
+bash instalar-mesa.sh 5 CODIGO_DA_EQUIPE          # 5 = número da mesa
 sudo reboot
 ```
 A tela da mesa fica instalada no Pi (`~/bunviko-mesa`, servida em `localhost:8080`) e abre
 sozinha em tela cheia. Ela fala direto com o banco online, então o Pi precisa de internet.
+
+### Desempenho (1 GB de RAM)
+- Sem desktop: a tela roda num kiosk mínimo (cage + Chromium), ~150-250 MB a menos de RAM.
+- Chromium enxuto: sem extensões, tradução, sincronização, cache pequeno, até 2 processos.
+- Página leve: ~4 MB de memória JS, 4 arquivos locais (supabase-js incluso, sem CDN).
+- Animações só com transform/opacity; tela inicial parada não gasta processador.
+- Se ainda pesar: `bash instalar-mesa.sh 5 CODIGO leve` desliga as animações contínuas.
+- Swap de 512 MB, Bluetooth/modem/impressora desligados, reinício automático às 4h.
+- Se o navegador fechar ou travar, ele reabre sozinho em 3 segundos.
 
 ## Publicar uma versão nova
 O código fica em github.com/bunviko27-alt/chamar-garcom (privado). O site está na Vercel

@@ -1,10 +1,13 @@
 // Código compartilhado pelas telas: login por código, tempo real (Supabase),
 // ações, alertas sonoros e notificações push.
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 import { SUPABASE_URL, SUPABASE_CHAVE } from "/config.js";
 
-const sb = createClient(SUPABASE_URL, SUPABASE_CHAVE, { auth: { persistSession: false } });
+// supabase-js vem de /vendor/supabase.js (arquivo único, carregado antes deste módulo):
+// sem depender de CDN e com um download só, o que pesa menos no Raspberry Pi.
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_CHAVE, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 let token = null;
 let ultimo = null;
