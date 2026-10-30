@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bunviko 3D</title>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #faf7f2; font-family: system-ui, sans-serif; color: #1f1a17; }
+  model-viewer { width: 100%; height: calc(100% - 52px); --poster-color: transparent; }
+  nav { height: 52px; display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  button { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 0; background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.12); cursor: pointer; }
+</style>
+</head>
+<body>
+  <nav>
+    <button data-o="-35deg 72deg auto">Frente</button>
+    <button data-o="-90deg 85deg auto">Lateral</button>
+    <button data-o="145deg 72deg auto">Traseira</button>
+    <button data-o="-20deg 165deg auto">Por baixo</button>
+  </nav>
+  <model-viewer id="mv" src="bunviko.glb" camera-controls touch-action="pan-y" shadow-intensity="1"
+    exposure="0.85" tone-mapping="neutral" environment-image="neutral" camera-orbit="-35deg 72deg auto"></model-viewer>
+<script>
+  document.querySelectorAll("button").forEach((b) => b.onclick = () => {
+    document.getElementById("mv").cameraOrbit = b.dataset.o;
+  });
+</script>
+</body>
+</html>
