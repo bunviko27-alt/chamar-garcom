@@ -30,12 +30,70 @@ $("nome-mesa").textContent = `Mesa ${MESA}`;
 document.title = `Mesa ${MESA}`;
 
 let ultimo = null, giro = 0, statusAtual = null, vikoAtual = "";
+let reacao = null;   // expressão momentânea (ao ser tocado ou ao acenar)
 
 function mostrarViko(humor, extra) {
+  if (reacao) humor = reacao;
   const chave = humor + extra;
   if (chave === vikoAtual) return;          // só redesenha quando muda
   vikoAtual = chave;
-  $("personagem").innerHTML = viko({ humor, extra });
+  $("viko").innerHTML = viko({ humor, extra });
+}
+
+// ---------------------------------------------------------------- Viko vivo
+// As animações só rodam no momento da reação; parado, ele não gasta processador.
+
+const OCIOSO_PRIMEIRO = 15000;   // sem ninguém tocar: primeiro aceno
+const OCIOSO_REPETE = 25000;     // e depois a cada tanto
+const CHAMADAS = ["Psiu! Precisa de algo?", "Toque em mim!", "Tô aqui se precisar!", "Bateu a fome? Me chama!"];
+const RESPOSTAS = {
+  chamando: ["Ele já está vindo!", "Calma, já avisei!", "Já já ele chega!"],
+  pedido: ["Já já fica pronto!", "Tô de olho no seu pedido!", "Hmm, que cheirinho!"],
+};
+let tOcioso, tReacao, tBalao, nFala = 0;
+
+function reagir(humor, ms) {
+  clearTimeout(tReacao);
+  reacao = humor;
+  desenhar();
+  tReacao = setTimeout(() => { reacao = null; desenhar(); }, ms);
+}
+
+function falar(texto, ms = 2600) {
+  clearTimeout(tBalao);
+  $("balao").textContent = texto;
+  $("balao").classList.add("mostrar");
+  tBalao = setTimeout(() => $("balao").classList.remove("mostrar"), ms);
+}
+
+function reiniciarClasse(el, classe) {
+  el.classList.remove(classe);
+  void el.offsetWidth;                       // reinicia a animação
+  el.classList.add(classe);
+}
+
+function acenar() {
+  if (document.body.dataset.tela === "inicio" && !document.documentElement.classList.contains("leve")) {
+    reiniciarClasse($("corpo"), "ola");
+    reagir("animado", 2400);
+    falar(CHAMADAS[nFala++ % CHAMADAS.length]);
+    setTimeout(() => $("corpo").classList.remove("ola"), 2400);
+  }
+  tOcioso = setTimeout(acenar, OCIOSO_REPETE);
+}
+
+function cutucado() {
+  clearTimeout(tOcioso);
+  tOcioso = setTimeout(acenar, OCIOSO_PRIMEIRO);
+}
+
+function tocarViko() {
+  const tela = document.body.dataset.tela;
+  reiniciarClasse($("corpo"), "apertado");
+  if (tela === "inicio") return chamar();
+  reagir("alegre", 1100);
+  const frases = RESPOSTAS[tela];
+  if (frases) falar(frases[nFala++ % frases.length], 2000);
 }
 
 function pedidoDaMesa(estado) {
@@ -83,10 +141,13 @@ setInterval(() => {
 const chamar = () => { if (!(MESA in (ultimo?.chamados || {}))) acaoMesa(MESA, "chamar"); };
 $("chamar").onclick = chamar;
 $("chamar-mini").onclick = chamar;
-$("personagem").onclick = () => { if (document.body.dataset.tela === "inicio") chamar(); };
+$("palco").onclick = tocarViko;
+$("corpo").addEventListener("animationend", (e) => { if (e.animationName === "aperta") $("corpo").classList.remove("apertado"); });
+document.addEventListener("pointerdown", cutucado);
 $("cancelar").onclick = () => acaoMesa(MESA, "cancelar");
 document.addEventListener("contextmenu", (e) => e.preventDefault());
 
 mostrarViko("feliz", null);
 piscar();
+cutucado();
 iniciar({ papel: "mesa", mesa: MESA, aoReceber: (estado) => { ultimo = estado; desenhar(); } });

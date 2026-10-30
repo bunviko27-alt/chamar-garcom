@@ -23,7 +23,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   padding: 1.2vmin 3.4vmin; border-radius: 999px; box-shadow: 0 .8vmin 0 var(--amarelo-escuro);
 }
 
-main { flex: 1; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 2vmin; padding: 0 5vmin; min-height: 0; }
+main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 1vmin; padding: 0 3vmin 0 5vmin; min-height: 0; }
 .estado { display: none; flex-direction: column; align-items: flex-start; gap: 2.6vmin; }
 body[data-tela="inicio"] [data-para="inicio"],
 body[data-tela="chamando"] [data-para="chamando"],
@@ -46,15 +46,47 @@ h1 { margin: 0; font-size: 2.35em; font-weight: 1000; line-height: 1.02; letter-
 
 .link { background: none; color: #6b4a2e; font-size: .85em; font-weight: 800; text-decoration: underline; padding: 1vmin 0; }
 
-/* Viko */
+/* Viko: grande, flutuando. Camadas: palco (flutua) > corpo (pula, aperta) > desenho.
+   Cada camada anima só transform, então a placa de vídeo faz o trabalho. */
 .personagem { display: grid; place-items: center; min-height: 0; }
-.personagem .viko {
-  width: min(42vmin + 12vw, 100%); max-height: 70vh; cursor: pointer;
+.palco {
+  position: relative; width: min(64vmin + 8vw, 100%); cursor: pointer;
   animation: flutua 3.2s ease-in-out infinite; will-change: transform;
 }
-body[data-tela="chamando"] .personagem .viko { animation: pula .8s cubic-bezier(.3, 0, .4, 1) infinite; }
+.corpo { position: relative; transform-origin: 50% 88%; will-change: transform; }
+.corpo .viko { width: 100%; max-height: 74vh; }
 @keyframes flutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.2vmin); } }
+
+/* Chamando: pulinhos sem parar */
+body[data-tela="chamando"] .corpo { animation: pula .8s cubic-bezier(.3, 0, .4, 1) infinite; }
 @keyframes pula { 0%, 100% { transform: translateY(0) scale(1, 1); } 40% { transform: translateY(-4vmin) scale(.97, 1.03); } 80% { transform: translateY(0) scale(1.04, .96); } }
+
+/* Toque: apertão (espreme e volta com mola) */
+body[data-tela] .corpo.apertado { animation: aperta .5s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes aperta { 0% { transform: scale(1, 1); } 25% { transform: scale(1.12, .84); } 55% { transform: scale(.94, 1.08); } 100% { transform: scale(1, 1); } }
+
+/* Olá: dois pulinhos + mãozinha acenando + balão (só quando ninguém toca há um tempo) */
+.corpo.ola { animation: pula .7s cubic-bezier(.3, 0, .4, 1) 2; }
+.mao {
+  position: absolute; left: -3%; top: 26%; width: 18%; aspect-ratio: 1;
+  opacity: 0; transform: scale(.4) rotate(0); transform-origin: 75% 90%;
+  transition: opacity .2s, transform .25s cubic-bezier(.3, 1.6, .5, 1);
+}
+.corpo.ola .mao { opacity: 1; transform: scale(1); animation: acena .45s ease-in-out .25s 4 alternate; }
+@keyframes acena { from { transform: rotate(18deg); } to { transform: rotate(-22deg); } }
+
+.balao {
+  position: absolute; left: -6%; top: -4%; max-width: 70%;
+  background: var(--cartao); color: var(--texto); font-weight: 1000; font-size: .95em; line-height: 1.15;
+  padding: 2vmin 3vmin; border-radius: 3vmin; box-shadow: 0 1vmin 0 var(--amarelo-escuro);
+  opacity: 0; transform: translateY(2vmin) scale(.8); transform-origin: 70% 100%;
+  transition: opacity .25s, transform .3s cubic-bezier(.3, 1.6, .5, 1); pointer-events: none;
+}
+.balao::after {
+  content: ""; position: absolute; right: 18%; bottom: -1.6vmin; width: 3.2vmin; height: 3.2vmin;
+  background: var(--cartao); transform: rotate(45deg); border-radius: .6vmin;
+}
+.balao.mostrar { opacity: 1; transform: none; }
 
 /* Progresso do pedido (barra grossa com brilho) */
 .progresso {
@@ -93,7 +125,7 @@ body[data-tela="pedido"] footer { display: flex; }
 @media (max-aspect-ratio: 1/1) {
   main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; text-align: center; }
   .personagem { order: -1; }
-  .personagem .viko { width: 56vmin; }
+  .palco { width: 56vmin; }
   .estado { align-items: center; }
 }
 
