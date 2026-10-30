@@ -2,11 +2,11 @@
 
 ## Texto da narração (para o ElevenLabs)
 Colar como **um bloco só** (quebra de linha faz o ElevenLabs gerar só o primeiro trecho).
-Sugestão de voz: feminina, natural (a "Larissa Diniz" já aprovada nos vídeos da Conkio), Eleven v4,
-estabilidade 50%, similaridade 75%.
+Voz escolhida: **Larissa Diniz** (ElevenLabs, biblioteca), Eleven v4, estabilidade 50%, similaridade 75%.
+Tom: amiga contando para outra, sem animação forçada (decisão do dono em 2026-10-30).
 
 ```
-[conversando com uma amiga, curiosa, sorrindo] Já imaginou o seu cliente chamar o garçom com um toque só? Sem ficar levantando a mão, acenando pro salão inteiro... [animada] Com o Bunviko, ele aperta o botão da mesa e o garçom recebe na hora, no celular. E o cliente ainda acompanha o pedido: anotado, na cozinha, a caminho! Bunviko. Um toque. Seu sabor. Vem conhecer no nosso Instagram!
+[conversando com uma amiga, natural, tranquila, sorrindo] Já imaginou o seu cliente chamar o garçom com um toque só? Sem ficar levantando a mão, acenando pro salão inteiro... Com o Bunviko, ele aperta o botão da mesa e o garçom recebe na hora, no celular. E o cliente ainda acompanha o pedido: anotado, na cozinha, a caminho. Bunviko. Um toque. Seu sabor. Vem conhecer no nosso Instagram!
 ```
 (≈ 400 caracteres ≈ 400 créditos; ~22–24 s de fala)
 
