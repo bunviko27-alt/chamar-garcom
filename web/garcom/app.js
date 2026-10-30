@@ -34,6 +34,25 @@ $("dlg").addEventListener("close", () => {
 });
 $("novo").onclick = () => abrirPedido(null);
 
+// Alerta grande no topo + som + vibração (a vibração funciona no Android; no iPhone
+// a Apple não deixa sites vibrarem, lá quem vibra é a notificação do sistema).
+let tAlerta;
+function avisar(humor, extra, titulo, texto, vibracao, bipes) {
+  const el = $("alerta");
+  el.innerHTML = `${viko({ humor, extra })}<div><b>${esc(titulo)}</b><small>${esc(texto)}</small></div>`;
+  el.classList.remove("mostrar");
+  void el.offsetWidth;
+  el.classList.add("mostrar");
+  clearTimeout(tAlerta);
+  tAlerta = setTimeout(() => el.classList.remove("mostrar"), 7000);
+  bipe(bipes);
+  if (navigator.vibrate) navigator.vibrate(vibracao);
+}
+$("alerta").onclick = () => {
+  $("alerta").classList.remove("mostrar");
+  $("chamados").scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
 const selo = (mesa, tipo = "") => `<div class="selo-mesa ${tipo}"><div><small>MESA</small>${esc(mesa)}</div></div>`;
 const vazio = (humor, texto) => `<div class="vazio">${viko({ humor })}<span>${texto}</span></div>`;
 
@@ -74,11 +93,14 @@ function desenhar() {
       <span class="pilula ${p.status === "enviado" ? "" : "marca"}">${p.status === "enviado" ? "⏳" : "🔥"}</span>
     </div>`).join("") : vazio("concentrado", "Cozinha sem pedidos.");
 
-  // Bipe só para o que é novo; com a tela fechada quem avisa é a notificação push.
+  // Aviso só para o que é novo; com a tela fechada quem avisa é a notificação push.
   const atuais = new Set([...chamados.map(([m]) => "c" + m), ...prontos.map((p) => "p" + p.id)]);
   if (vistos) {
     const novos = [...atuais].filter((k) => !vistos.has(k));
-    if (novos.length) bipe(novos.some((k) => k[0] === "c") ? 3 : 2);
+    const chamado = novos.find((k) => k[0] === "c");
+    const pronto = prontos.find((p) => novos.includes("p" + p.id));
+    if (chamado) avisar("animado", "sino", `Mesa ${chamado.slice(1)} está chamando!`, "Toque para ver", [500, 150, 500, 150, 900], 3);
+    else if (pronto) avisar("alegre", "prato", `Pedido da mesa ${pronto.mesa} pronto!`, "Pode levar", [300, 120, 300], 2);
   }
   vistos = atuais;
   const total = chamados.length + prontos.length;

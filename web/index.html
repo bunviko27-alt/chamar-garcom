@@ -2,30 +2,67 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chamar garçom</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffcf35">
+<title>Bunviko</title>
 <link rel="stylesheet" href="/comum/base.css">
 <link rel="icon" href="/icone.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-  body { padding: 24px 16px; max-width: 520px; margin: 0 auto; }
-  h1 { margin: 0 0 4px; letter-spacing: -.02em; }
-  p { color: var(--suave); margin: 0 0 20px; }
-  a.cartao { text-decoration: none; color: inherit; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; }
-  a.cartao span { color: var(--suave); font-weight: 500; font-size: 14px; }
-  form { display: flex; gap: 8px; }
-  input { flex: 1; font: inherit; font-size: 16px; padding: 12px; border-radius: 12px; border: 1.5px solid var(--linha); background: var(--cartao); }
+  body { background: var(--amarelo); min-height: 100vh; min-height: 100dvh; position: relative; overflow-x: hidden; }
+  .mancha { position: absolute; pointer-events: none; }
+  .m1 { width: 300px; height: 260px; right: -110px; top: -120px; background: var(--marca); border-radius: 46% 54% 60% 40%; }
+  .m2 { width: 220px; height: 190px; left: -100px; bottom: -80px; background: var(--vermelho); border-radius: 58% 42% 40% 60%; }
+  main { position: relative; max-width: 520px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 20px 40px; text-align: center; }
+  .viko-topo .viko { width: 150px; margin: 0 auto; }
+  .logo { display: inline-flex; align-items: flex-start; font-size: 44px; font-weight: 1000; letter-spacing: -.035em; line-height: 1; margin-top: 4px; }
+  .logo svg { width: 32px; height: 32px; margin-top: -10px; }
+  .slogan { margin: 6px 0 28px; font-size: 18px; font-weight: 900; color: #6b4a2e; }
+  .escolha { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+  .opcao {
+    display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 24px;
+    background: var(--cartao); color: var(--texto); text-decoration: none;
+    box-shadow: 0 6px 0 var(--amarelo-escuro); transition: transform .08s, box-shadow .08s;
+  }
+  .opcao:active { transform: translateY(6px); box-shadow: 0 0 0 var(--amarelo-escuro); }
+  .opcao .icone {
+    flex: none; width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center;
+    font-size: 30px; background: var(--marca); box-shadow: 0 4px 0 var(--marca-escura);
+  }
+  .opcao.cozinha .icone { background: var(--vermelho); box-shadow: 0 4px 0 var(--vermelho-escuro); }
+  .opcao b { display: block; font-size: 22px; font-weight: 1000; }
+  .opcao small { display: block; font-size: 15px; font-weight: 800; color: var(--suave); margin-top: 2px; }
+  .opcao .vai { margin-left: auto; font-size: 26px; font-weight: 1000; color: var(--marca); }
+  .extra { margin-top: 26px; font-size: 14px; font-weight: 800; color: #6b4a2e; }
+  .extra a { color: var(--texto); }
 </style>
 </head>
 <body>
-  <h1>Chamar garçom</h1>
-  <p>Escolha a tela deste aparelho.</p>
-  <a class="cartao" href="/garcom">🧑‍🍳 Garçom <span>celular</span></a>
-  <a class="cartao" href="/cozinha">🔥 Cozinha <span>tablet ou celular</span></a>
-  <a class="cartao" href="/demo">👀 Demonstração <span>tudo lado a lado</span></a>
-  <h2 class="secao">Tela de uma mesa</h2>
-  <form onsubmit="location.href='/mesa/' + encodeURIComponent(this.n.value); return false;">
-    <input name="n" inputmode="numeric" pattern="\w{1,10}" placeholder="Número da mesa" required>
-    <button class="btn marca">Abrir</button>
-  </form>
+  <div class="mancha m1"></div><div class="mancha m2"></div>
+  <main>
+    <div class="viko-topo" id="viko"></div>
+    <div class="logo">bunviko<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 13 L11 3 M17 18 L26 10 M19 26 L29 26" stroke="#EF7130" stroke-width="5" stroke-linecap="round"/></svg></div>
+    <p class="slogan">Um toque. Seu sabor.</p>
+
+    <nav class="escolha">
+      <a class="opcao" href="/garcom">
+        <span class="icone">🙋</span>
+        <span><b>Sou garçom</b><small>No celular: chamados e pedidos prontos</small></span>
+        <span class="vai">›</span>
+      </a>
+      <a class="opcao cozinha" href="/cozinha">
+        <span class="icone">🍳</span>
+        <span><b>Sou da cozinha</b><small>No notebook ou TV: pedidos para preparar</small></span>
+        <span class="vai">›</span>
+      </a>
+    </nav>
+
+    <p class="extra">Quer ver tudo funcionando junto? <a href="/demo">Abrir a demonstração</a></p>
+  </main>
+<script type="module">
+  import { viko, piscar } from "/comum/viko.js";
+  document.getElementById("viko").innerHTML = viko({ humor: "feliz" });
+  piscar();
+</script>
 </body>
 </html>

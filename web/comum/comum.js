@@ -139,7 +139,6 @@ export function bipe(vezes = 2) {
     osc.start(t);
     osc.stop(t + 0.22);
   }
-  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 }
 
 // Liga som e notificações push. Retorna uma frase para mostrar ao usuário.
