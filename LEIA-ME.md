@@ -26,8 +26,21 @@ Tentativas erradas em excesso bloqueiam novas tentativas por alguns minutos.
   - **Android**: funciona direto no Chrome; "Adicionar à tela inicial" é opcional.
 - Cozinha: o mesmo, em `https://SITE/cozinha`.
 
-## Raspberry Pi da mesa
+## Endereços
+- Site: https://chamar-garcom-topaz.vercel.app
+- Cozinha (notebook/TV): https://chamar-garcom-topaz.vercel.app/cozinha
+- Garçom (celular): https://chamar-garcom-topaz.vercel.app/garcom
+- Demonstração das 3 telas: https://chamar-garcom-topaz.vercel.app/demo
+
+## Raspberry Pi da mesa (instalado no próprio Pi)
+Copie esta pasta para o Pi e rode, de dentro dela:
 ```
-bash instalar-mesa.sh 5 https://SITE 123456
+bash instalar-mesa.sh 5 CODIGO_DA_EQUIPE
 sudo reboot
 ```
+A tela da mesa fica instalada no Pi (`~/bunviko-mesa`, servida em `localhost:8080`) e abre
+sozinha em tela cheia. Ela fala direto com o banco online, então o Pi precisa de internet.
+
+## Publicar uma versão nova
+O código fica em github.com/bunviko27-alt/chamar-garcom (privado). O site está na Vercel
+(conta bunviko). O banco é o projeto Supabase do Bunviko.
