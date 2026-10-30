@@ -52,6 +52,24 @@ sudo reboot
 A tela da mesa fica instalada no Pi (`~/bunviko-mesa`, servida em `localhost:8080`) e abre
 sozinha em tela cheia. Ela fala direto com o banco online, então o Pi precisa de internet.
 
+### Botão físico (chamar garçom)
+O botão laranja em cima do aparelho é uma chave táctil 12x12 ligada direto no Raspberry:
+
+| Chave táctil | Raspberry Pi 3B |
+|---|---|
+| um terminal | **GPIO 17** (pino físico 11) |
+| outro terminal | **GND** (pino físico 9) |
+
+Não precisa de resistor (o Pi usa o pull-up interno). O `mesa-botao.py` (instalado como serviço)
+entrega a tela e avisa na hora quando o botão é apertado. A tela aponta para ele com a aba
+"Aperte o botão aqui em cima". Para testar sem o botão: tecla Enter/Espaço, ou
+`curl -X POST http://localhost:8080/botao` no próprio Pi.
+
+### Acompanhar o pedido
+A mesa mostra o pedido como um rastreio de entrega: **Anotado → Na cozinha → A caminho →
+Entregue**, cada etapa com o horário (colunas `preparando_em`, `pronto_em`, `entregue_em`,
+migração `supabase/migrations/002_horarios_das_etapas.sql`).
+
 ### Desempenho (1 GB de RAM)
 - Sem desktop: a tela roda num kiosk mínimo (cage + Chromium), ~150-250 MB a menos de RAM.
 - Chromium enxuto: sem extensões, tradução, sincronização, cache pequeno, até 2 processos.

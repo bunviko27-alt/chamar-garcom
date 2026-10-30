@@ -26,7 +26,7 @@ if systemctl list-unit-files 2>/dev/null | grep -q '^lightdm\.service'; then TEM
 
 echo "==> Instalando o necessário..."
 sudo apt-get update -qq
-PACOTES="python3 curl fonts-noto-color-emoji fonts-inter"
+PACOTES="python3 python3-gpiozero curl fonts-noto-color-emoji fonts-inter"
 if [ "$TEM_DESKTOP" = 1 ]; then
   PACOTES="$PACOTES unclutter"
 else
@@ -41,7 +41,9 @@ rm -rf "$DESTINO"
 cp -r "$ORIGEM" "$DESTINO"
 rm -rf "$HOME/.config/mesa-kiosk"   # cache antigo do navegador: garante a versão nova
 
-echo "==> Servidor local da tela (inicia sozinho com o Pi, ~15 MB de RAM)..."
+cp "$(cd "$(dirname "$0")" && pwd)/mesa-botao.py" "$DESTINO/../bunviko-mesa-botao.py"
+
+echo "==> Servidor local da tela + botão físico no GPIO 17 (inicia sozinho, ~20 MB de RAM)..."
 sudo tee /etc/systemd/system/bunviko-mesa.service >/dev/null <<EOF
 [Unit]
 Description=Bunviko - tela da mesa
@@ -49,7 +51,7 @@ After=network.target
 
 [Service]
 User=$USER
-ExecStart=/usr/bin/python3 -m http.server 8080 --bind 127.0.0.1 -d $DESTINO
+ExecStart=/usr/bin/python3 $HOME/bunviko-mesa-botao.py --pasta $DESTINO --porta 8080
 Restart=always
 Nice=5
 

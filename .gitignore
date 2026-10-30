@@ -6,3 +6,4 @@ supabase/carregar_funcao.js
 
 .vercel
 .env*
+supabase/carregar_002.js

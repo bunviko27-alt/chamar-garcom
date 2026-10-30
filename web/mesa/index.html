@@ -14,6 +14,16 @@
 
   <header>
     <div class="logo">bunviko<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 13 L11 3 M17 18 L26 10 M19 26 L29 26" stroke="#EF7130" stroke-width="5" stroke-linecap="round"/></svg></div>
+
+    <!-- Aponta para o botão laranja físico, que fica em cima do aparelho, bem no centro -->
+    <button class="dica-botao" id="dica-botao">
+      <span class="seta" aria-hidden="true">
+        <svg class="ic-seta" viewBox="0 0 24 24"><path d="M12 19V5 M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="ic-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span id="dica-texto">Aperte o botão aqui em cima</span>
+    </button>
+
     <span class="mesa-num" id="nome-mesa"></span>
   </header>
 
@@ -22,11 +32,8 @@
       <!-- Início -->
       <section class="estado" data-para="inicio">
         <h1>Oi, eu sou<br>o Viko!</h1>
-        <p class="sub">Um toque e o garçom vem até você.</p>
-        <button class="btn-grande" id="chamar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
-          Chamar garçom
-        </button>
+        <p class="sub">Precisa do garçom? Aperte o botão laranja em cima de mim.</p>
+        <button class="link" id="chamar">ou toque aqui</button>
       </section>
 
       <!-- Chamando -->
@@ -36,14 +43,17 @@
         <button class="link" id="cancelar">Chamei sem querer</button>
       </section>
 
-      <!-- Pedido em andamento -->
+      <!-- Pedido em andamento: rastreio, etapa por etapa -->
       <section class="estado" data-para="pedido">
         <h1 id="p-titulo"></h1>
         <p class="sub" id="p-sub"></p>
-        <div class="progresso">
-          <div class="barra"><i id="p-barra"></i></div>
+        <div class="rastreio">
+          <div class="rastreio-topo"><b>Seu pedido</b><span id="p-feito"></span></div>
           <ol class="etapas" id="p-etapas">
-            <li>Anotado</li><li>Na cozinha</li><li>A caminho</li>
+            <li><i><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></i><b>Anotado</b><small></small></li>
+            <li><i><svg viewBox="0 0 24 24"><path d="M3 11h14v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5v-2z"/><path d="M17 12h4"/><path d="M8 4c0 1.5 1 1.5 1 3M12 4c0 1.5 1 1.5 1 3"/></svg></i><b>Na cozinha</b><small></small></li>
+            <li><i><svg viewBox="0 0 24 24"><path d="M3 17h18"/><path d="M5 17a7 7 0 0 1 14 0"/><path d="M12 10V8"/></svg></i><b>A caminho</b><small></small></li>
+            <li><i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><b>Entregue</b><small></small></li>
           </ol>
         </div>
       </section>
@@ -53,7 +63,7 @@
       <div class="palco" id="palco">
         <div class="corpo" id="corpo">
           <div id="viko"></div>
-          <!-- mãozinha que acena -->
+          <!-- mãozinha: acena e aponta para o botão de cima -->
           <svg class="mao" viewBox="0 0 60 60" aria-hidden="true"><g transform="translate(60 0) scale(-1 1)">
             <path d="M14 52 C6 44 6 30 12 24 C14 14 22 8 30 10 C40 6 52 14 50 28 C54 38 48 50 38 54 C30 58 20 58 14 52Z" fill="#FDEEDB"/>
             <path d="M18 50 C24 54 34 54 40 50" stroke="#F4DCC0" stroke-width="5" fill="none" stroke-linecap="round"/>
@@ -64,13 +74,6 @@
       </div>
     </div>
   </main>
-
-  <footer>
-    <button class="btn-mini" id="chamar-mini">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
-      <span>Chamar garçom</span>
-    </button>
-  </footer>
 
 <script src="/vendor/supabase.js"></script>
 <script type="module" src="/mesa/app.js"></script>
