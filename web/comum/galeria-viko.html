@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viko · expressões</title>
+<link rel="stylesheet" href="/comum/base.css">
+<style>
+  body { padding: 24px; }
+  .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+  figure { margin: 0; background: var(--amarelo); border-radius: 20px; padding: 16px; text-align: center; }
+  figure .viko { width: 100%; }
+  figcaption { font-weight: 900; margin-top: 6px; }
+</style>
+</head>
+<body>
+  <h1>Viko: expressões</h1>
+  <div class="grade" id="g"></div>
+<script type="module">
+  import { viko, piscar } from "/comum/viko.js";
+  const casos = [["feliz"], ["animado", "sino"], ["atento", "bloco"], ["concentrado", "chapeu"], ["alegre", "prato"], ["apaixonado", "brilhos"]];
+  document.getElementById("g").innerHTML = casos.map(([h, e]) =>
+    `<figure>${viko({ humor: h, extra: e })}<figcaption>${h}${e ? " + " + e : ""}</figcaption></figure>`).join("");
+  piscar();
+</script>
+</body>
+</html>

@@ -9,41 +9,52 @@
 <link rel="stylesheet" href="/mesa/estilo.css">
 </head>
 <body data-tela="inicio">
-  <header><span id="restaurante"></span><span class="mesa" id="nome-mesa"></span></header>
+  <!-- Manchas de fundo (fixas: desenhadas uma vez só) -->
+  <div class="mancha m1"></div><div class="mancha m2"></div><div class="mancha m3"></div>
+
+  <header>
+    <div class="logo">bunviko<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 13 L11 3 M17 18 L26 10 M19 26 L29 26" stroke="#EF7130" stroke-width="5" stroke-linecap="round"/></svg></div>
+    <span class="mesa-num" id="nome-mesa"></span>
+  </header>
 
   <main>
-    <section class="tela" id="inicio">
-      <button class="botao" id="chamar" aria-label="Chamar garçom">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
-        <span>Chamar<br>garçom</span>
-      </button>
-      <p class="dica">Toque no botão e alguém vem até a sua mesa</p>
-    </section>
+    <div class="texto">
+      <!-- Início -->
+      <section class="estado" data-para="inicio">
+        <h1>Oi, eu sou<br>o Viko!</h1>
+        <p class="sub">Um toque e o garçom vem até você.</p>
+        <button class="btn-grande" id="chamar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
+          Chamar garçom
+        </button>
+      </section>
 
-    <section class="tela" id="chamando">
-      <div class="anel"><div class="miolo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
-      </div></div>
-      <h1>Garçom avisado!</h1>
-      <p class="sub">Já está vindo até você</p>
-      <button class="link" id="cancelar">Chamei sem querer</button>
-    </section>
+      <!-- Chamando -->
+      <section class="estado" data-para="chamando">
+        <h1>Já avisei<br>o garçom!</h1>
+        <p class="sub">Ele está vindo até a sua mesa.</p>
+        <button class="link" id="cancelar">Chamei sem querer</button>
+      </section>
 
-    <section class="tela" id="pedido">
-      <div class="icone" id="p-icone"></div>
-      <h1 id="p-titulo"></h1>
-      <p class="sub" id="p-sub"></p>
-      <div class="etapas" id="p-etapas">
-        <div class="etapa"><i></i>Anotado</div>
-        <div class="etapa"><i></i>Na cozinha</div>
-        <div class="etapa"><i></i>A caminho</div>
-      </div>
-    </section>
+      <!-- Pedido em andamento -->
+      <section class="estado" data-para="pedido">
+        <h1 id="p-titulo"></h1>
+        <p class="sub" id="p-sub"></p>
+        <div class="progresso">
+          <div class="barra"><i id="p-barra"></i></div>
+          <ol class="etapas" id="p-etapas">
+            <li>Anotado</li><li>Na cozinha</li><li>A caminho</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="personagem" id="personagem"></div>
   </main>
 
   <footer>
-    <button class="mini" id="chamar-mini">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
+    <button class="btn-mini" id="chamar-mini">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
       <span>Chamar garçom</span>
     </button>
   </footer>

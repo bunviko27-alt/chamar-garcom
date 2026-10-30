@@ -1,86 +1,102 @@
-/* Estilo da tela: mesa. Edite à vontade; as cores e a base comum ficam em /comum/base.css. */
+/* Estilo da tela: mesa (Raspberry Pi 3B, tela de 5" 800x480).
+ * Tudo em vmin: escala junto com a tela. Só transform/opacity são animados.
+ * As cores e a base comum ficam em /comum/base.css. */
 
 html, body { height: 100%; overflow: hidden; user-select: none; -webkit-user-select: none; }
-body { display: flex; flex-direction: column; font-size: 4vmin; }
-
-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 3.5vmin 5vmin 0; color: var(--suave); font-size: 1em; font-weight: 600;
+body {
+  background: var(--amarelo); position: relative;
+  display: flex; flex-direction: column; font-size: 4vmin;
 }
-header .mesa { color: var(--texto); background: var(--cartao); box-shadow: var(--sombra);
-  padding: 1vmin 3vmin; border-radius: 999px; }
 
-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3vmin 5vmin; }
-.tela { display: none; flex-direction: column; align-items: center; text-align: center; gap: 3vmin; width: 100%; }
-body[data-tela="inicio"] #inicio,
-body[data-tela="chamando"] #chamando,
-body[data-tela="pedido"] #pedido { display: flex; }
+/* Manchas laranja/vermelhas do fundo, como na identidade */
+.mancha { position: absolute; border-radius: 50%; pointer-events: none; }
+.m1 { width: 50vmin; height: 44vmin; right: -16vmin; top: -24vmin; background: var(--marca); border-radius: 46% 54% 60% 40%; }
+.m2 { width: 44vmin; height: 38vmin; right: -10vmin; bottom: -16vmin; background: var(--vermelho); border-radius: 58% 42% 40% 60%; }
+.m3 { width: 30vmin; height: 26vmin; left: -12vmin; bottom: -12vmin; background: var(--marca); border-radius: 50% 50% 44% 56%; }
 
-/* Botão principal */
-.botao {
-  width: 52vmin; height: 52vmin; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ff7a4d, var(--marca) 55%, var(--marca-escura));
-  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 1.5vmin; box-shadow: 0 2vmin 5vmin rgba(232, 87, 42, .35), inset 0 -1vmin 2vmin rgba(0,0,0,.12);
-  transition: transform .12s;
-  will-change: transform;          /* toque não repinta a sombra */
+header, main, footer { position: relative; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 3.6vmin 5vmin 0; }
+.logo { display: flex; align-items: flex-start; font-size: 1.45em; font-weight: 1000; letter-spacing: -.03em; color: var(--texto); line-height: 1; }
+.logo svg { width: .8em; height: .8em; margin-left: .05em; margin-top: -.15em; }
+.mesa-num {
+  background: var(--cartao); color: var(--texto); font-weight: 900; font-size: .95em;
+  padding: 1.2vmin 3.4vmin; border-radius: 999px; box-shadow: 0 .8vmin 0 var(--amarelo-escuro);
 }
-.botao:active { transform: scale(.94); }
-.botao svg { width: 17vmin; height: 17vmin; }
-.botao span { font-size: 1.25em; font-weight: 800; line-height: 1.1; }
-.dica { color: var(--suave); font-size: .9em; }
 
-/* Chamando */
-.anel { position: relative; width: 40vmin; height: 40vmin; display: grid; place-items: center; }
-.anel::before, .anel::after {
-  content: ""; position: absolute; inset: 0; border-radius: 50%;
-  background: var(--marca); opacity: .25; animation: pulso 2.4s ease-out infinite;
-  will-change: transform, opacity;
+main { flex: 1; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 2vmin; padding: 0 5vmin; min-height: 0; }
+.estado { display: none; flex-direction: column; align-items: flex-start; gap: 2.6vmin; }
+body[data-tela="inicio"] [data-para="inicio"],
+body[data-tela="chamando"] [data-para="chamando"],
+body[data-tela="pedido"] [data-para="pedido"] { display: flex; }
+
+h1 { margin: 0; font-size: 2.35em; font-weight: 1000; line-height: 1.02; letter-spacing: -.025em; color: var(--texto); }
+.sub { margin: 0; font-size: 1.1em; font-weight: 800; color: #6b4a2e; min-height: 1.3em; transition: opacity .35s; }
+
+/* Botão principal: branco "fofinho", afunda ao tocar */
+.btn-grande {
+  display: inline-flex; align-items: center; gap: 2.4vmin; margin-top: 1vmin;
+  background: var(--cartao); color: var(--texto);
+  font-size: 1.25em; font-weight: 1000; letter-spacing: -.01em;
+  padding: 3.4vmin 6vmin 3.4vmin 4.6vmin; border-radius: 999px;
+  box-shadow: 0 1.4vmin 0 var(--amarelo-escuro);
+  transition: transform .08s, box-shadow .08s; will-change: transform;
 }
-.anel::after { animation-delay: 1.2s; }
-.anel .miolo { position: relative; width: 26vmin; height: 26vmin; border-radius: 50%;
-  background: var(--marca); display: grid; place-items: center; color: #fff; }
-.anel .miolo svg { width: 13vmin; height: 13vmin; animation: balanca 1.6s ease-in-out infinite; will-change: transform; }
-@keyframes pulso { from { transform: scale(.6); opacity: .45; } to { transform: scale(1.25); opacity: 0; } }
-@keyframes balanca { 0%,100% { transform: rotate(0); } 25% { transform: rotate(14deg); } 75% { transform: rotate(-14deg); } }
+.btn-grande svg { width: 1.4em; height: 1.4em; color: var(--marca); }
+.btn-grande:active { transform: translateY(1.4vmin); box-shadow: 0 0 0 var(--amarelo-escuro); }
 
-h1 { margin: 0; font-size: 1.7em; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
-.sub { margin: 0; color: var(--suave); font-size: 1.05em; min-height: 1.3em; transition: opacity .4s; }
-.link { background: none; color: var(--suave); text-decoration: underline; font-size: .85em; padding: 1vmin; }
+.link { background: none; color: #6b4a2e; font-size: .85em; font-weight: 800; text-decoration: underline; padding: 1vmin 0; }
 
-/* Pedido */
-.icone { font-size: 18vmin; line-height: 1; will-change: transform; }
-[data-status="enviado"] .icone { animation: desliza 1.6s ease-in-out infinite; }
-[data-status="preparando"] .icone { animation: mexe 1s ease-in-out infinite; }
-[data-status="pronto"] .icone { animation: pula .9s ease-in-out infinite; }
-[data-status="entregue"] .icone { animation: none; }
-@keyframes desliza { 0%,100% { transform: translateX(-2vmin); } 50% { transform: translateX(2vmin); } }
-@keyframes mexe { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg) translateY(-1vmin); } }
-@keyframes pula { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3vmin); } }
+/* Viko */
+.personagem { display: grid; place-items: center; min-height: 0; }
+.personagem .viko {
+  width: min(42vmin + 12vw, 100%); max-height: 70vh; cursor: pointer;
+  animation: flutua 3.2s ease-in-out infinite; will-change: transform;
+}
+body[data-tela="chamando"] .personagem .viko { animation: pula .8s cubic-bezier(.3, 0, .4, 1) infinite; }
+@keyframes flutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.2vmin); } }
+@keyframes pula { 0%, 100% { transform: translateY(0) scale(1, 1); } 40% { transform: translateY(-4vmin) scale(.97, 1.03); } 80% { transform: translateY(0) scale(1.04, .96); } }
 
-.etapas { display: flex; gap: 2vmin; width: min(100%, 90vmin); margin-top: 1vmin; }
-.etapa { flex: 1; display: flex; flex-direction: column; gap: 1.2vmin; font-size: .7em;
-  color: var(--suave); font-weight: 600; }
-.etapa i { height: 1.4vmin; border-radius: 99px; background: var(--linha); overflow: hidden; position: relative; contain: strict; }
-.etapa.feita { color: var(--texto); }
-.etapa.feita i { background: var(--ok); }
-.etapa.atual { color: var(--texto); }
-.etapa.atual i::after { content: ""; position: absolute; inset: 0; width: 40%;
-  background: var(--marca); border-radius: 99px; animation: carrega 1.6s ease-in-out infinite;
-  will-change: transform; }
-@keyframes carrega { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+/* Progresso do pedido (barra grossa com brilho) */
+.progresso {
+  width: 100%; background: var(--cartao); border-radius: 3.4vmin; padding: 3vmin 3.4vmin 2.4vmin;
+  box-shadow: 0 1.2vmin 0 var(--amarelo-escuro); margin-top: 1vmin;
+}
+.barra { height: 3.8vmin; border-radius: 999px; background: var(--linha); overflow: hidden; }
+.barra i {
+  display: block; height: 100%; width: 10%; border-radius: 999px; background: var(--marca);
+  position: relative; transition: width .6s cubic-bezier(.3, 1.4, .5, 1);
+}
+.barra.completa i { background: var(--ok); }
+.barra i::after {
+  content: ""; position: absolute; left: 2.2vmin; right: 2.2vmin; top: .8vmin; height: .9vmin;
+  border-radius: 999px; background: rgba(255, 255, 255, .45);
+}
+.etapas { list-style: none; display: flex; justify-content: space-between; margin: 1.8vmin 0 0; padding: 0; }
+.etapas li { font-size: .72em; font-weight: 900; color: var(--suave); }
+.etapas li.feita { color: var(--ok-escura); }
+.etapas li.feita::before { content: "✓ "; }
+.etapas li.atual { color: var(--marca-escura); }
 
-footer { display: none; justify-content: center; padding: 0 5vmin 4vmin; }
+footer { display: none; justify-content: flex-start; padding: 0 5vmin 4vmin; }
 body[data-tela="pedido"] footer { display: flex; }
-.mini {
-  display: flex; align-items: center; gap: 2vmin; background: var(--cartao); box-shadow: var(--sombra);
-  color: var(--texto); padding: 2.2vmin 4.5vmin; border-radius: 999px; font-size: .95em; font-weight: 700;
+.btn-mini {
+  display: flex; align-items: center; gap: 1.8vmin; background: var(--cartao); color: var(--texto);
+  padding: 2vmin 4vmin; border-radius: 999px; font-size: .9em; font-weight: 900;
+  box-shadow: 0 1vmin 0 var(--amarelo-escuro); transition: transform .08s, box-shadow .08s;
 }
-.mini svg { width: 5vmin; height: 5vmin; color: var(--marca); }
-.mini.avisado { color: var(--ok); }
-.mini.avisado svg { color: var(--ok); }
+.btn-mini:active { transform: translateY(1vmin); box-shadow: 0 0 0 var(--amarelo-escuro); }
+.btn-mini svg { width: 4.6vmin; height: 4.6vmin; color: var(--marca); }
+.btn-mini.avisado { color: var(--ok-escura); }
+.btn-mini.avisado svg { color: var(--ok); }
 
-/* Só transform/opacity são animados (feitos pela GPU, sem repintar a tela).
-   Tela inicial parada = processador livre. ?leve=1 desliga as animações contínuas. */
+/* Tela em pé (retrato): Viko em cima, texto embaixo */
+@media (max-aspect-ratio: 1/1) {
+  main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; text-align: center; }
+  .personagem { order: -1; }
+  .personagem .viko { width: 56vmin; }
+  .estado { align-items: center; }
+}
+
+/* Leve: ?leve=1 ou "reduzir movimento" desligam as animações contínuas */
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
 .leve *, .leve *::before, .leve *::after { animation: none !important; }

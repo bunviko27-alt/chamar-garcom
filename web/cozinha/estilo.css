@@ -1,19 +1,41 @@
-/* Estilo da tela: cozinha. Edite à vontade; as cores e a base comum ficam em /comum/base.css. */
+/* Estilo da tela: cozinha (notebook ou TV, lido de longe). As cores e a base comum ficam em /comum/base.css. */
 
-body { padding: 0 16px 24px; }
-header { padding: 18px 4px 4px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-header h1 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
-header small { display: block; color: var(--suave); font-weight: 500; font-size: 13px; }
-#ativar { background: #fff4ec; color: var(--marca-escura); border: 1.5px dashed #f4b896;
-  padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+body { min-height: 100vh; }
+
+.topo-app {
+  position: sticky; top: 0; z-index: 5; background: var(--amarelo);
+  padding: 12px 22px; box-shadow: 0 5px 0 var(--amarelo-escuro);
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+}
+.ola { display: flex; align-items: center; gap: 12px; }
+.ola-viko .viko { width: 64px; margin-top: -10px; }
+.ola h1 { margin: 0; font-size: 26px; font-weight: 1000; letter-spacing: -.02em; }
+.ola small { font-size: 14px; font-weight: 800; color: #6b4a2e; }
+.direita { display: flex; align-items: center; gap: 14px; }
+.relogio { font-size: 26px; font-weight: 1000; font-variant-numeric: tabular-nums; }
 body.som #ativar { display: none; }
+.aviso-alerta { margin: 10px 22px 0; }
 
-.colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 640px) { .colunas { grid-template-columns: 1fr; } }
-.lista { display: flex; flex-direction: column; gap: 10px; }
-.novo { border-left: 6px solid var(--aviso); }
-.preparando { border-left: 6px solid var(--marca); }
-.cartao .mesa { font-size: 26px; }
-.atrasado .tempo { color: var(--marca-escura); font-weight: 700; }
-.cartao .desc { font-size: 17px; }
-.cartao .btn { padding: 14px; font-size: 16px; }
+.colunas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 6px 22px 28px; align-items: start; }
+@media (max-width: 900px) { .colunas { grid-template-columns: 1fr; } }
+.coluna h2.secao { font-size: 21px; }
+.novos h2 .n { background: var(--marca); }
+.fogo h2 .n { background: var(--vermelho); }
+.saindo h2 .n { background: var(--ok); }
+.lista { display: flex; flex-direction: column; gap: 14px; }
+
+/* Pedido: número da mesa grande, tempo e o que fazer */
+.pedido .titulo-cartao { font-size: 20px; }
+.pedido .desc { font-size: 19px; font-weight: 800; }
+.pedido .desc i { color: var(--suave); font-weight: 700; }
+.pedido .btn { font-size: 16px; padding: 15px; }
+.novos .pedido { border-color: #ffd9c2; }
+.fogo .pedido { border-color: #f6cbc2; }
+.saindo .pedido { border-color: #c9ecd3; opacity: .9; }
+.pedido.chega { animation: chega .5s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes chega { from { transform: scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+.pedido .selo-mesa { width: 62px; height: 62px; font-size: 28px; }
+.fogo .selo-mesa { background: var(--vermelho); box-shadow: 0 4px 0 var(--vermelho-escuro); }
+.topo .direita-cartao { margin-left: auto; }
+
+.vazio { min-height: 84px; }

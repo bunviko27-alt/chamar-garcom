@@ -64,3 +64,9 @@ sozinha em tela cheia. Ela fala direto com o banco online, então o Pi precisa d
 ## Publicar uma versão nova
 O código fica em github.com/bunviko27-alt/chamar-garcom (privado). O site está na Vercel
 (conta bunviko). O banco é o projeto Supabase do Bunviko.
+
+## Visual
+Identidade Bunviko: amarelo `#FFCF35`, laranja `#EF7130`, vermelho `#CE3B25`, marrom `#32231C`,
+fonte Nunito (em `web/comum/fontes`, licença OFL) e o mascote **Viko** (`web/comum/viko.js`,
+em SVG, com expressões para cada situação). Veja todas as expressões em `/comum/galeria-viko.html`.
+Botões e cartões usam sombra sólida (sem desfoque): fica bonito e leve no Raspberry Pi.

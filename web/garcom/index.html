@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#faf7f2">
+<meta name="theme-color" content="#ffcf35">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Garçom</title>
 <link rel="stylesheet" href="/comum/base.css">
@@ -13,20 +13,36 @@
 <link rel="stylesheet" href="/garcom/estilo.css">
 </head>
 <body>
-  <header>
-    <h1>Garçom <small id="restaurante"></small></h1>
+  <header class="topo-app">
+    <div class="ola">
+      <div class="ola-viko" id="ola-viko"></div>
+      <div>
+        <h1>Oi, garçom!</h1>
+        <small id="restaurante"></small>
+      </div>
+    </div>
+    <div class="placar">
+      <span class="pilula marca" title="Mesas chamando">🔔 <b id="p-chamados">0</b></span>
+      <span class="pilula ok" title="Prontos para levar">🍽️ <b id="p-prontos">0</b></span>
+    </div>
   </header>
-  <button id="ativar">🔔 Toque aqui para ativar som e notificações</button>
-  <p id="aviso-alerta" class="aviso-alerta"></p>
 
-  <h2 class="secao">Chamando <span class="n" id="n-chamados"></span></h2>
-  <div class="lista" id="chamados"></div>
+  <main>
+    <button id="ativar" class="ativar">
+      <span class="ativar-icone">🔔</span>
+      <span><b>Ative os avisos</b><br><small id="ativar-texto">Para saber na hora quando uma mesa chamar.</small></span>
+    </button>
+    <p id="aviso-alerta" class="aviso-alerta"></p>
 
-  <h2 class="secao">Prontos para levar <span class="n" id="n-prontos"></span></h2>
-  <div class="lista" id="prontos"></div>
+    <h2 class="secao">Mesas chamando <span class="n" id="n-chamados"></span></h2>
+    <div class="lista" id="chamados"></div>
 
-  <h2 class="secao">Na cozinha</h2>
-  <div class="lista" id="cozinha"></div>
+    <h2 class="secao">Prontos para levar <span class="n ok" id="n-prontos"></span></h2>
+    <div class="lista" id="prontos"></div>
+
+    <h2 class="secao">Na cozinha</h2>
+    <div class="lista" id="cozinha"></div>
+  </main>
 
   <button class="btn marca fab" id="novo">+ Novo pedido</button>
 
@@ -37,11 +53,11 @@
         <label for="dlg-mesa">Mesa</label>
         <select id="dlg-mesa"></select>
       </div>
-      <label for="dlg-desc">O que foi pedido? (opcional)</label>
+      <label for="dlg-desc">O que foi pedido?</label>
       <textarea id="dlg-desc" placeholder="Ex.: 2 parmegianas, 1 suco de laranja sem açúcar"></textarea>
       <div class="acoes">
         <button class="btn claro" value="cancelar">Voltar</button>
-        <button class="btn marca" value="enviar">Enviar para cozinha</button>
+        <button class="btn marca" value="enviar">Enviar</button>
       </div>
     </form>
   </dialog>

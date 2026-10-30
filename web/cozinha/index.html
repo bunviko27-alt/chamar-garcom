@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#faf7f2">
+<meta name="theme-color" content="#ffcf35">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Cozinha</title>
 <link rel="stylesheet" href="/comum/base.css">
@@ -13,22 +13,35 @@
 <link rel="stylesheet" href="/cozinha/estilo.css">
 </head>
 <body>
-  <header>
-    <h1>Cozinha <small id="restaurante"></small></h1>
-    <button id="ativar">🔔 Ativar som e notificações</button>
+  <header class="topo-app">
+    <div class="ola">
+      <div class="ola-viko" id="ola-viko"></div>
+      <div>
+        <h1>Cozinha</h1>
+        <small id="restaurante"></small>
+      </div>
+    </div>
+    <div class="direita">
+      <span class="relogio" id="relogio"></span>
+      <button id="ativar" class="btn claro">🔔 Ativar som</button>
+    </div>
   </header>
   <p id="aviso-alerta" class="aviso-alerta"></p>
 
-  <div class="colunas">
-    <section>
+  <main class="colunas">
+    <section class="coluna novos">
       <h2 class="secao">Novos <span class="n" id="n-novos"></span></h2>
       <div class="lista" id="novos"></div>
     </section>
-    <section>
-      <h2 class="secao">Preparando</h2>
+    <section class="coluna fogo">
+      <h2 class="secao">No fogo <span class="n" id="n-fogo"></span></h2>
       <div class="lista" id="preparando"></div>
     </section>
-  </div>
+    <section class="coluna saindo">
+      <h2 class="secao">Esperando o garçom <span class="n" id="n-prontos"></span></h2>
+      <div class="lista" id="prontos"></div>
+    </section>
+  </main>
 
 <script src="/vendor/supabase.js"></script>
 <script type="module" src="/cozinha/app.js"></script>

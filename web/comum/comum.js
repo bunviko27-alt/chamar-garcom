@@ -2,6 +2,7 @@
 // ações, alertas sonoros e notificações push.
 
 import { SUPABASE_URL, SUPABASE_CHAVE } from "/config.js";
+import { viko } from "/comum/viko.js";
 
 // supabase-js vem de /vendor/supabase.js (arquivo único, carregado antes deste módulo):
 // sem depender de CDN e com um download só, o que pesa menos no Raspberry Pi.
@@ -192,6 +193,7 @@ function pedirCodigo(opcoes, chave) {
     tela.className = "login";
     tela.innerHTML = `
       <div class="login-caixa">
+        ${viko({ humor: "atento" })}
         <h2>Código da equipe</h2>
         <p>Digite o código do restaurante para ativar ${NOMES[opcoes.papel]}${opcoes.mesa ? ` (mesa ${esc(opcoes.mesa)})` : ""}.</p>
         <div class="login-pontos">${"<i></i>".repeat(6)}</div>
