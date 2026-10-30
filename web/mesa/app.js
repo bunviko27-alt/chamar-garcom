@@ -9,7 +9,10 @@ import { viko, piscar } from "/comum/viko.js";
 
 const PARAMS = new URLSearchParams(location.search);
 // /mesa/5 (site) ou /mesa/?n=5 (instalado no Raspberry)
-const MESA = (location.pathname.match(/^\/mesa\/(\w+)$/) || [])[1] || PARAMS.get("n") || "1";
+// Sem número na URL (Raspberry): o aparelho é cadastrado por QR Code e o número
+// vem do cadastro feito pelo dono.
+let MESA = (location.pathname.match(/^\/mesa\/(\w+)$/) || [])[1] || PARAMS.get("n") || null;
+const URL_TEM_MESA = !!MESA;
 if (PARAMS.get("leve") === "1") document.documentElement.classList.add("leve");
 const MOSTRAR_ENTREGUE = 30; // segundos que "Bom apetite!" fica na tela
 
@@ -38,8 +41,11 @@ const DICAS = {
 };
 
 const $ = (id) => document.getElementById(id);
-$("nome-mesa").textContent = `Mesa ${MESA}`;
-document.title = `Mesa ${MESA}`;
+function mostrarNumero() {
+  $("nome-mesa").textContent = MESA ? `Mesa ${MESA}` : "";
+  document.title = MESA ? `Mesa ${MESA}` : "Bunviko";
+}
+mostrarNumero();
 
 let ultimo = null, giro = 0, statusAtual = null, vikoAtual = "";
 let reacao = null;   // expressão momentânea (ao ser tocado ou ao acenar)
@@ -185,4 +191,11 @@ if (["localhost", "127.0.0.1"].includes(location.hostname)) {
 mostrarViko("feliz", null);
 piscar();
 cutucado();
-iniciar({ papel: "mesa", mesa: MESA, aoReceber: (estado) => { ultimo = estado; desenhar(); } });
+iniciar({
+  papel: "mesa", mesa: URL_TEM_MESA ? MESA : null,
+  aoReceber: (estado) => {
+    if (estado.mesa && estado.mesa !== MESA) { MESA = estado.mesa; mostrarNumero(); }
+    ultimo = estado;
+    desenhar();
+  },
+});

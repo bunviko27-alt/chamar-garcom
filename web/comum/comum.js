@@ -1,7 +1,7 @@
 // Código compartilhado pelas telas: login por código, tempo real (Supabase),
 // ações, alertas sonoros e notificações push.
 
-import { SUPABASE_URL, SUPABASE_CHAVE } from "/config.js";
+import { SUPABASE_URL, SUPABASE_CHAVE, SITE_URL } from "/config.js";
 import { viko } from "/comum/viko.js";
 
 // supabase-js vem de /vendor/supabase.js (arquivo único, carregado antes deste módulo):
@@ -20,11 +20,26 @@ let difRelogio = 0; // relógio do servidor - relógio deste aparelho (segundos)
 
 export async function iniciar(opcoes) {
   aoReceber = opcoes.aoReceber;
-  const chave = `cg-token-${opcoes.papel}${opcoes.mesa ? "-" + opcoes.mesa : ""}`;
-  token = ler(chave);
-  const codigo = new URLSearchParams(location.search).get("codigo");
-  if (!token && codigo) token = await entrar(codigo, opcoes, chave).catch(() => null);
-  if (!token) token = await pedirCodigo(opcoes, chave);
+  if (opcoes.papel === "mesa" && !opcoes.mesa) {
+    // Aparelho de mesa sem número na URL: cadastrado pelo dono com QR Code.
+    token = ler("cg-token-aparelho");
+    if (!token) {
+      token = await parear();
+      gravar("cg-token-aparelho", token);
+    }
+  } else {
+    const chave = `cg-token-${opcoes.papel}${opcoes.mesa ? "-" + opcoes.mesa : ""}`;
+    token = ler(chave);
+    const codigo = new URLSearchParams(location.search).get("codigo");
+    if (!token && codigo) token = await entrar(codigo, opcoes, chave).catch(() => null);
+    if (!token) token = await pedirCodigo(opcoes, chave);
+  }
+  if (opcoes.papel === "mesa") {
+    // "Estou ligado": o dono vê no painel quais mesas estão online.
+    const ping = () => sb.rpc("ping", { p_token: token }).then(() => {}, () => {});
+    ping();
+    setInterval(ping, 60000);
+  }
   await atualizar();
   setInterval(atualizar, 30000); // garantia, caso algum aviso em tempo real se perca
   document.addEventListener("visibilitychange", () => { if (!document.hidden) atualizar(); });
@@ -235,5 +250,52 @@ function pedirCodigo(opcoes, chave) {
       if (/^\d$/.test(e.key)) digitar(e.key);
       if (e.key === "Backspace") digitar("x");
     });
+  });
+}
+
+// ---------------------------------------------------------------- cadastro por QR Code
+
+// Mostra um QR Code; o dono escaneia, escolhe o número da mesa e o aparelho
+// recebe o token. Devolve o token. Um código novo é gerado quando o anterior expira.
+function parear() {
+  return new Promise((resolver) => {
+    const tela = document.createElement("div");
+    tela.className = "pareamento";
+    tela.innerHTML = `
+      <div class="pareamento-texto">
+        ${viko({ humor: "atento" })}
+        <h2>Oi! Sou um aparelho novo.</h2>
+        <p>Para me cadastrar, o dono do restaurante escaneia este QR Code com o celular.</p>
+        <p class="pareamento-codigo">Código: <b></b></p>
+      </div>
+      <div class="pareamento-qr"><div class="qr"></div><small>Aponte a câmera do celular</small></div>`;
+    document.body.appendChild(tela);
+    const qr = tela.querySelector(".qr"), cod = tela.querySelector(".pareamento-codigo b");
+    let atual = null, espera;
+
+    async function novoCodigo() {
+      const { data, error } = await sb.rpc("pareamento_iniciar");
+      if (error) { cod.textContent = "sem conexão…"; espera = setTimeout(novoCodigo, 5000); return; }
+      atual = data;
+      const url = `${SITE_URL}/parear?c=${data.codigo}`;
+      const q = window.qrcode(0, "M");
+      q.addData(url);
+      q.make();
+      qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+      cod.textContent = data.codigo.replace(/^(...)/, "$1 ");
+      espera = setTimeout(consultar, 2500);
+    }
+
+    async function consultar() {
+      const { data, error } = await sb.rpc("pareamento_status", { p_codigo: atual.codigo, p_segredo: atual.segredo });
+      if (!error && data.estado === "pronto") {
+        tela.remove();
+        return resolver(data.token);
+      }
+      if (!error && data.estado === "expirado") return novoCodigo();
+      espera = setTimeout(consultar, 2500);
+    }
+
+    novoCodigo();
   });
 }

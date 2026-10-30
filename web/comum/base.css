@@ -41,6 +41,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { margin: 0; background: var(--fundo); }
 button { font: inherit; cursor: pointer; border: 0; color: inherit; }
 
@@ -159,4 +160,26 @@ h2.secao .n:empty { display: none; }
   .login-caixa h2 { font-size: 19px; }
   .login-teclado button { height: 40px; font-size: 19px; }
   .login-pontos { margin: 8px 0 2px; }
+}
+
+/* ---------------------------------------------------------------- cadastro do aparelho (QR) */
+.pareamento {
+  position: fixed; inset: 0; z-index: 100; background: var(--amarelo);
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 5vmin; padding: 5vmin 7vmin;
+}
+.pareamento-texto .viko { width: 34vmin; margin: 0 0 1vmin -2vmin; }
+.pareamento h2 { margin: 0 0 1.4vmin; font-size: 7vmin; font-weight: 1000; line-height: 1.05; letter-spacing: -.02em; }
+.pareamento p { margin: 0 0 1.4vmin; font-size: 3.8vmin; font-weight: 800; color: #6b4a2e; max-width: 62vmin; }
+.pareamento-codigo b { font-size: 1.2em; letter-spacing: .12em; color: var(--texto); }
+.pareamento-qr {
+  background: var(--cartao); border-radius: 4vmin; padding: 3vmin; text-align: center;
+  box-shadow: 0 1.4vmin 0 var(--amarelo-escuro);
+}
+.pareamento-qr .qr { width: 58vmin; height: 58vmin; max-width: 42vw; max-height: 42vw; }
+.pareamento-qr .qr svg { width: 100%; height: 100%; display: block; }
+.pareamento-qr small { display: block; margin-top: 1vmin; font-size: 3vmin; font-weight: 900; color: var(--suave); }
+@media (max-aspect-ratio: 1/1) {
+  .pareamento { grid-template-columns: 1fr; text-align: center; }
+  .pareamento-texto .viko { margin: 0 auto; }
+  .pareamento p { margin-left: auto; margin-right: auto; }
 }

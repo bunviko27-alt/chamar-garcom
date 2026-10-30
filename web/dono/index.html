@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffcf35">
+<title>Área do dono · Bunviko</title>
+<link rel="stylesheet" href="/comum/base.css">
+<link rel="icon" href="/icone.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/dono/estilo.css">
+</head>
+<body>
+  <header class="topo-app">
+    <a class="logo" href="/">bunviko<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 13 L11 3 M17 18 L26 10 M19 26 L29 26" stroke="#EF7130" stroke-width="5" stroke-linecap="round"/></svg></a>
+    <button class="btn claro mini" id="sair" hidden>Sair</button>
+  </header>
+
+  <main id="conteudo"><p class="carregando">Carregando…</p></main>
+
+  <template id="painel">
+    <section class="cartao restaurante">
+      <div class="linha-topo">
+        <div>
+          <small class="rotulo">Seu restaurante</small>
+          <h1 id="r-nome"></h1>
+        </div>
+        <button class="btn claro mini" id="r-editar">Editar</button>
+      </div>
+      <div class="codigo-equipe">
+        <div>
+          <small class="rotulo">Código da equipe</small>
+          <div class="digitos" id="r-codigo"></div>
+          <small class="ajuda">Garçons e cozinha digitam esse código uma vez no celular ou notebook.</small>
+        </div>
+        <button class="btn claro mini" id="r-trocar">Trocar</button>
+      </div>
+      <div class="atalhos">
+        <a class="btn marca" href="/garcom">🙋 Tela do garçom</a>
+        <a class="btn claro" href="/cozinha">🍳 Tela da cozinha</a>
+      </div>
+    </section>
+
+    <h2 class="secao">Aparelhos das mesas <span class="n" id="n-aparelhos"></span></h2>
+    <div class="lista" id="aparelhos"></div>
+
+    <section class="cartao cadastrar">
+      <div class="linha-topo"><b>Cadastrar aparelho novo</b></div>
+      <ol class="passos">
+        <li>Ligue o aparelho: ele mostra um <b>QR Code</b> na tela.</li>
+        <li>Aponte a câmera deste celular para o QR Code.</li>
+        <li>Escolha o número da mesa. Pronto!</li>
+      </ol>
+      <form class="manual" id="manual">
+        <input id="manual-codigo" maxlength="7" placeholder="ou digite o código (ex.: K7Q 2MF)" autocapitalize="characters">
+        <button class="btn claro mini" type="submit">Usar</button>
+      </form>
+    </section>
+  </template>
+
+  <dialog id="dlg">
+    <form method="dialog">
+      <h3 id="dlg-titulo"></h3>
+      <div id="dlg-campos"></div>
+      <div class="acoes">
+        <button class="btn claro" value="cancelar">Voltar</button>
+        <button class="btn marca" value="ok" id="dlg-ok">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+<script src="/vendor/supabase.js"></script>
+<script type="module" src="/dono/app.js"></script>
+</body>
+</html>

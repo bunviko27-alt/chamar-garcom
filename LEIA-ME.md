@@ -88,3 +88,19 @@ Identidade Bunviko: amarelo `#FFCF35`, laranja `#EF7130`, vermelho `#CE3B25`, ma
 fonte Nunito (em `web/comum/fontes`, licença OFL) e o mascote **Viko** (`web/comum/viko.js`,
 em SVG, com expressões para cada situação). Veja todas as expressões em `/comum/galeria-viko.html`.
 Botões e cartões usam sombra sólida (sem desfoque): fica bonito e leve no Raspberry Pi.
+
+## Área do dono e cadastro de aparelhos por QR Code
+- `/dono`: o dono entra com e-mail e senha (ou Google), cria o restaurante e vê o
+  **código da equipe** e a lista **Aparelhos das mesas** (ligado/desligado, trocar número, remover).
+- O aparelho da mesa, ao ligar sem cadastro, mostra um **QR Code** (e um código de 6 letras).
+  O dono escaneia com o celular, abre `/parear?c=CÓDIGO`, escolhe o número da mesa e pronto:
+  o aparelho vira a "Mesa N" sozinho. Se o dono remover o aparelho, ele volta a mostrar o QR.
+- Banco: `supabase/migrations/003_donos_e_pareamento.sql`.
+
+### Configuração do login (Supabase → Authentication)
+1. **URL Configuration**: Site URL = `https://chamar-garcom-topaz.vercel.app` e, em Redirect URLs,
+   `https://chamar-garcom-topaz.vercel.app/**` (senão o link de confirmação do e-mail cai em localhost).
+2. **Login com Google** (opcional):
+   - Google Cloud Console → APIs e serviços → Credenciais → Criar ID do cliente OAuth (Aplicativo da Web).
+   - Em "URIs de redirecionamento autorizados": `https://wrwjevaqhhulbkvxsqtq.supabase.co/auth/v1/callback`.
+   - Copie o Client ID e o Client Secret para Supabase → Authentication → Sign In / Providers → Google → ligar.

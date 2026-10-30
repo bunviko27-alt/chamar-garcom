@@ -1,8 +1,10 @@
 #!/bin/bash
 # Instala a tela da mesa NO PRÓPRIO Raspberry Pi 3B (1 GB de RAM).
 #
-#   bash instalar-mesa.sh 5 123456          5 = número da mesa, 123456 = código da equipe
-#   bash instalar-mesa.sh 5 123456 leve     idem, sem animações contínuas (economiza CPU)
+#   bash instalar-mesa.sh            jeito normal: ao ligar, o aparelho mostra um QR Code
+#                                    e o dono cadastra a mesa pelo celular (área do dono)
+#   bash instalar-mesa.sh leve       idem, sem animações contínuas (economiza CPU)
+#   bash instalar-mesa.sh 5 123456   jeito antigo: mesa 5 fixa, entrando com o código da equipe
 #
 # Recomendado: Raspberry Pi OS **Lite** 32 bits (sem área de trabalho). Em vez de um
 # desktop inteiro, a tela roda direto num kiosk mínimo (cage + Chromium), o que deixa
@@ -13,13 +15,20 @@
 # Rode de dentro da pasta do projeto (a que tem a pasta web/).
 set -e
 
-MESA="${1:?Uso: bash instalar-mesa.sh NUMERO_DA_MESA CODIGO_DA_EQUIPE [leve]}"
-CODIGO="${2:?Informe o código da equipe (6 dígitos)}"
-LEVE="${3:-}"
+LEVE=""; MESA=""; CODIGO=""
+for arg in "$@"; do
+  if [ "$arg" = "leve" ]; then LEVE=1
+  elif [ -z "$MESA" ]; then MESA="$arg"
+  else CODIGO="$arg"; fi
+done
 ORIGEM="$(cd "$(dirname "$0")" && pwd)/web"
 DESTINO="$HOME/bunviko-mesa"
-URL="http://localhost:8080/mesa/?n=$MESA&codigo=$CODIGO"
-[ "$LEVE" = "leve" ] && URL="$URL&leve=1"
+if [ -n "$MESA" ] && [ -n "$CODIGO" ]; then
+  URL="http://localhost:8080/mesa/?n=$MESA&codigo=$CODIGO"
+else
+  URL="http://localhost:8080/mesa/?"
+fi
+[ -n "$LEVE" ] && URL="$URL&leve=1"
 
 TEM_DESKTOP=0
 if systemctl list-unit-files 2>/dev/null | grep -q '^lightdm\.service'; then TEM_DESKTOP=1; fi
@@ -116,5 +125,6 @@ done
 echo "0 4 * * * root /sbin/shutdown -r now" | sudo tee /etc/cron.d/bunviko-reinicio >/dev/null
 
 echo
-echo "Pronto! Mesa $MESA instalada. Reinicie com:  sudo reboot"
+echo "Pronto! Reinicie com:  sudo reboot"
+[ -z "$MESA" ] && echo "Ao ligar, a tela mostra um QR Code: escaneie com o celular do dono para cadastrar a mesa."
 echo "Para atualizar depois: baixe a versão nova do projeto e rode este script de novo."
