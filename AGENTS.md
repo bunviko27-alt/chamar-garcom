@@ -79,7 +79,7 @@ chamando o garçom pela tela local; alerta grande do garçom; rotas publicadas n
 2. **Teste do dono** com conta real e cadastro de uma mesa pelo QR (pode usar `/mesa/` no notebook como se fosse o Pi).
 3. **Instalar num Raspberry real** e anotar ajustes de desempenho/tela/botão.
 4. **Teste de push** em Android e iPhone.
-5. **@ oficial do Instagram**: trocar a constante `INSTAGRAM` em `marketing/video-lancamento/bunviko-lancamento.html`.
+5. ~~@ oficial do Instagram~~: feito (**@bunviko.br**, constante `INSTAGRAM` do vídeo).
 6. **Vídeo de lançamento**: gerar a narração no ElevenLabs com o texto de `marketing/video-lancamento/roteiro-narracao.md`,
    sincronizar a animação com a voz, colocar trilha e efeitos, e só então gerar o MP4 (depois da aprovação do dono).
 7. **E-mail de produção**: o Supabase gratuito manda poucos e-mails por hora; configurar SMTP próprio antes de lançar.
