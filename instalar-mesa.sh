@@ -18,7 +18,7 @@ CODIGO="${2:?Informe o código da equipe (6 dígitos)}"
 LEVE="${3:-}"
 ORIGEM="$(cd "$(dirname "$0")" && pwd)/web"
 DESTINO="$HOME/bunviko-mesa"
-URL="http://localhost:8080/mesa.html?n=$MESA&codigo=$CODIGO"
+URL="http://localhost:8080/mesa/?n=$MESA&codigo=$CODIGO"
 [ "$LEVE" = "leve" ] && URL="$URL&leve=1"
 
 TEM_DESKTOP=0
@@ -84,7 +84,7 @@ else
   # Se o navegador fechar ou travar, abre de novo em 3 segundos.
   cat > "$HOME/.bunviko-kiosk.sh" <<EOF
 #!/bin/sh
-until curl -s -o /dev/null http://localhost:8080/mesa.html; do sleep 1; done
+until curl -s -o /dev/null http://localhost:8080/mesa/; do sleep 1; done
 while true; do
   cage -s -- $NAVEGADOR $FLAGS --ozone-platform=wayland "$URL"
   sleep 3

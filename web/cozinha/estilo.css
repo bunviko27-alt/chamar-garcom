@@ -1,0 +1,19 @@
+/* Estilo da tela: cozinha. Edite à vontade; as cores e a base comum ficam em /comum/base.css. */
+
+body { padding: 0 16px 24px; }
+header { padding: 18px 4px 4px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+header h1 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+header small { display: block; color: var(--suave); font-weight: 500; font-size: 13px; }
+#ativar { background: #fff4ec; color: var(--marca-escura); border: 1.5px dashed #f4b896;
+  padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: 14px; }
+body.som #ativar { display: none; }
+
+.colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .colunas { grid-template-columns: 1fr; } }
+.lista { display: flex; flex-direction: column; gap: 10px; }
+.novo { border-left: 6px solid var(--aviso); }
+.preparando { border-left: 6px solid var(--marca); }
+.cartao .mesa { font-size: 26px; }
+.atrasado .tempo { color: var(--marca-escura); font-weight: 700; }
+.cartao .desc { font-size: 17px; }
+.cartao .btn { padding: 14px; font-size: 16px; }

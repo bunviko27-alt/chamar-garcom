@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mesa</title>
+<link rel="stylesheet" href="/comum/base.css">
+<link rel="icon" href="/icone.svg">
+<link rel="stylesheet" href="/mesa/estilo.css">
+</head>
+<body data-tela="inicio">
+  <header><span id="restaurante"></span><span class="mesa" id="nome-mesa"></span></header>
+
+  <main>
+    <section class="tela" id="inicio">
+      <button class="botao" id="chamar" aria-label="Chamar garçom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
+        <span>Chamar<br>garçom</span>
+      </button>
+      <p class="dica">Toque no botão e alguém vem até a sua mesa</p>
+    </section>
+
+    <section class="tela" id="chamando">
+      <div class="anel"><div class="miolo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
+      </div></div>
+      <h1>Garçom avisado!</h1>
+      <p class="sub">Já está vindo até você</p>
+      <button class="link" id="cancelar">Chamei sem querer</button>
+    </section>
+
+    <section class="tela" id="pedido">
+      <div class="icone" id="p-icone"></div>
+      <h1 id="p-titulo"></h1>
+      <p class="sub" id="p-sub"></p>
+      <div class="etapas" id="p-etapas">
+        <div class="etapa"><i></i>Anotado</div>
+        <div class="etapa"><i></i>Na cozinha</div>
+        <div class="etapa"><i></i>A caminho</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <button class="mini" id="chamar-mini">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/></svg>
+      <span>Chamar garçom</span>
+    </button>
+  </footer>
+
+<script src="/vendor/supabase.js"></script>
+<script type="module" src="/mesa/app.js"></script>
+</body>
+</html>

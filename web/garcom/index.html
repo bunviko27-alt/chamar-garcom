@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Garçom</title>
+<link rel="stylesheet" href="/comum/base.css">
+<link rel="manifest" href="/manifest-garcom.json">
+<link rel="icon" href="/icone.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/garcom/estilo.css">
+</head>
+<body>
+  <header>
+    <h1>Garçom <small id="restaurante"></small></h1>
+  </header>
+  <button id="ativar">🔔 Toque aqui para ativar som e notificações</button>
+  <p id="aviso-alerta" class="aviso-alerta"></p>
+
+  <h2 class="secao">Chamando <span class="n" id="n-chamados"></span></h2>
+  <div class="lista" id="chamados"></div>
+
+  <h2 class="secao">Prontos para levar <span class="n" id="n-prontos"></span></h2>
+  <div class="lista" id="prontos"></div>
+
+  <h2 class="secao">Na cozinha</h2>
+  <div class="lista" id="cozinha"></div>
+
+  <button class="btn marca fab" id="novo">+ Novo pedido</button>
+
+  <dialog id="dlg">
+    <form method="dialog" id="form">
+      <h3 id="dlg-titulo">Anotar pedido</h3>
+      <div id="campo-mesa">
+        <label for="dlg-mesa">Mesa</label>
+        <select id="dlg-mesa"></select>
+      </div>
+      <label for="dlg-desc">O que foi pedido? (opcional)</label>
+      <textarea id="dlg-desc" placeholder="Ex.: 2 parmegianas, 1 suco de laranja sem açúcar"></textarea>
+      <div class="acoes">
+        <button class="btn claro" value="cancelar">Voltar</button>
+        <button class="btn marca" value="enviar">Enviar para cozinha</button>
+      </div>
+    </form>
+  </dialog>
+
+<script src="/vendor/supabase.js"></script>
+<script type="module" src="/garcom/app.js"></script>
+</body>
+</html>

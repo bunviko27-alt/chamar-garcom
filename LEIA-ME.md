@@ -7,11 +7,21 @@ tudo pela web, com notificação push no celular mesmo bloqueado.
 - **Vercel**: hospeda o site (pasta `web`).
 
 ## Estrutura
-- `supabase/migrations/001_inicial.sql`: tabelas, segurança e funções RPC.
+Cada tela tem a sua pasta, para trabalhar o design de uma sem mexer nas outras:
+
+| Pasta | Tela | Onde roda |
+|---|---|---|
+| `web/mesa/` | botão de chamar + andamento do pedido | Raspberry Pi da mesa |
+| `web/garcom/` | chamados e pedidos prontos | celular do garçom |
+| `web/cozinha/` | pedidos novos e em preparo | notebook/TV da cozinha |
+
+Em cada pasta: `index.html` (estrutura), `estilo.css` (visual) e `app.js` (comportamento).
+
+- `web/comum/`: cores e componentes comuns (`base.css`) e conexão com o banco (`comum.js`).
+- `web/vendor/supabase.js`: biblioteca do Supabase (cópia local, não editar).
+- `supabase/migrations/001_inicial.sql`: tabelas, segurança e funções do banco.
 - `supabase/functions/avisar/`: envia as notificações push.
-- `web/`: telas `mesa`, `garcom`, `cozinha`, `demo`, mais o service worker e os ícones.
-- `web/config.js`: endereço do Supabase e chaves públicas (preenchido na publicação).
-- `instalar-mesa.sh`: configura um Raspberry Pi como tela de mesa.
+- `instalar-mesa.sh`: instala a tela da mesa no Raspberry Pi.
 
 ## Segurança
 O site é público, mas nenhuma tabela é acessível direto. Cada aparelho digita
